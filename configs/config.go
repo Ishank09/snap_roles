@@ -7,6 +7,9 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type ConfigInterface interface {
+	LoadConfig() (*AppConfig, error)
+}
 type AppConfig struct {
 	DB_HOST string
 }
