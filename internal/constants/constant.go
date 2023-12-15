@@ -1,7 +1,6 @@
 package constants
 
 import (
-	"fmt"
 	"net/url"
 )
 
@@ -16,6 +15,12 @@ const (
 	Get  RequestType = "Get"
 	Post RequestType = "Post"
 )
+
+type ConstantsInterface interface {
+	GenerateGetURL()
+	GetMicrosoftData()
+	GetAppleData()
+}
 
 type CompanyStruct struct {
 	CompanyName string
@@ -39,6 +44,13 @@ func (c *CompanyStruct) GenerateGetURL() string {
 	u.RawQuery = q.Encode()
 
 	return u.String()
+}
+
+func (c *CompanyStruct) GetMicrosoftData() CompanyStruct {
+	return MicrosoftJobs
+}
+func (*CompanyStruct) GetAppleData() CompanyStruct {
+	return AppleJobs
 }
 
 var MicrosoftJobs = CompanyStruct{
@@ -94,10 +106,4 @@ type AppleJobsBodyStruct struct {
 	Page    int                   `json:"page"`
 	Locale  string                `json:"locale"`
 	Sort    string                `json:"sort"`
-}
-
-func main() {
-	// Example usage
-	url := MicrosoftJobs.GenerateGetURL()
-	fmt.Println("Microsoft Jobs URL:", url)
 }
