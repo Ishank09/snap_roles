@@ -32,3 +32,11 @@ type Properties struct {
 	EmploymentType  string   `json:"employmentType"`
 	EducationLevel  string   `json:"educationLevel"`
 }
+
+type MicrosoftResponse struct {
+	JobId       string     `json:"jobId"`
+	Title       string     `json:"title"`
+	PostingDate string     `json:"postingDate"`
+	PostedUrl   string     `json:"postedUrl"`
+	Properties  Properties `json:"properties"`
+}

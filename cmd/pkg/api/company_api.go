@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"time"
 )
 
 type CompanyApiInterface interface {
@@ -28,6 +29,45 @@ func unmarshalMicrosoftJSON(jsonData []byte, target *model.MicrosoftApiResponse)
 	}
 	return nil
 }
+
+func checkMicrosoftPostedDate(timestampString string) bool {
+	timestamp, err := time.Parse(time.RFC3339, timestampString)
+	if err != nil {
+		log.Fatalf("Unable to parse time, Microsoft API")
+		return false
+	}
+
+	// Calculate the duration between the current time and the timestamp
+	duration := time.Since(timestamp)
+
+	// Check if the duration is within the last 15 minutes
+	if duration <= 3*24*time.Hour {
+		return true
+	} else {
+		return false
+	}
+}
+
+func getLatestMicrosoftJobs(resp model.MicrosoftApiResponse) []model.MicrosoftResponse {
+	jobs := resp.OperationResult.Result.Jobs
+	var response []model.MicrosoftResponse
+	for _, job := range jobs {
+		var one_job model.MicrosoftResponse
+		one_job.JobId = job.JobId
+		one_job.PostingDate = job.PostingDate
+		one_job.Properties = job.Properties
+		one_job.Properties.Description = ""
+		one_job.Title = job.Title
+		one_job.PostedUrl = fmt.Sprintf(constants.MicrosoftJobShareUrl, job.JobId)
+		if checkMicrosoftPostedDate(one_job.PostingDate) {
+			response = append(response, one_job)
+		}
+
+	}
+	return response
+
+}
+
 func (c *CompanyApiStruct) GetMicrosoftJobs() ([]byte, error) {
 	microsoftStruct := c.Constant.GetMicrosoftData()
 	url := microsoftStruct.GenerateGetURL()
@@ -47,8 +87,9 @@ func (c *CompanyApiStruct) GetMicrosoftJobs() ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error during unmarshaling: %s", err)
 	}
+	constructedResponse := getLatestMicrosoftJobs(microsoftApiResponse)
 
-	marshaledJSON, err := json.Marshal(microsoftApiResponse)
+	marshaledJSON, err := json.Marshal(constructedResponse)
 	if err != nil {
 		return nil, fmt.Errorf("Error during marshaling: %s", err)
 	}
