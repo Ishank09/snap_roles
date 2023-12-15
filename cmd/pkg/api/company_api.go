@@ -1,10 +1,11 @@
 package api
 
 import (
+	"encoding/json"
 	"example/snap_roles/cmd/model"
 	"example/snap_roles/cmd/pkg/api/handlers"
-	"example/snap_roles/cmd/pkg/api/helper"
 	"example/snap_roles/internal/constants"
+	"fmt"
 	"io/ioutil"
 	"log"
 )
@@ -15,28 +16,44 @@ type CompanyApiInterface interface {
 }
 
 type CompanyApiStruct struct {
-	constant constants.CompanyStruct
-	handler  handlers.HandlerStruct
+	Constant constants.CompanyStruct
+	Handler  handlers.HandlerStruct
 }
 
-func (c *CompanyApiStruct) GetMicrosoftJobs() []byte {
-	microsoftStruct := c.constant.GetMicrosoftData()
+// UnmarshalJSON is a generic function to unmarshal JSON data into a provided data structure
+func unmarshalMicrosoftJSON(jsonData []byte, target *model.MicrosoftApiResponse) error {
+	if err := json.Unmarshal(jsonData, target); err != nil {
+		log.Fatalf("Error unmarshalling JSON: %s", err)
+		return err
+	}
+	return nil
+}
+func (c *CompanyApiStruct) GetMicrosoftJobs() ([]byte, error) {
+	microsoftStruct := c.Constant.GetMicrosoftData()
 	url := microsoftStruct.GenerateGetURL()
-	resp, err := c.handler.GetApi(url)
+	resp, err := c.Handler.GetApi(url)
 	if err != nil {
-		log.Fatalf("Microsoft API error:%s", err)
+		return nil, fmt.Errorf("Microsoft API error: %s", err)
 	}
 	defer resp.Body.Close()
 
-	body, err2 := ioutil.ReadAll(resp.Body)
-	if err2 != nil {
-		log.Fatalf("Microsoft API error. Error reading response body: %s", err)
-		return nil
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("Microsoft API error. Error reading response body: %s", err)
 	}
+
 	var microsoftApiResponse model.MicrosoftApiResponse
-	helper.UnmarshalJSON(body, &microsoftApiResponse)
-	marshel, _ := helper.MarshalJSON(microsoftApiResponse)
-	return marshel
+	err = unmarshalMicrosoftJSON(body, &microsoftApiResponse)
+	if err != nil {
+		return nil, fmt.Errorf("Error during unmarshaling: %s", err)
+	}
+
+	marshaledJSON, err := json.Marshal(microsoftApiResponse)
+	if err != nil {
+		return nil, fmt.Errorf("Error during marshaling: %s", err)
+	}
+
+	return marshaledJSON, nil
 }
 
 func (c *CompanyApiStruct) GetAppleJobs(interface{}) {

@@ -5,21 +5,24 @@ import (
 	"example/snap_roles/cmd/pkg/api/controller"
 	"example/snap_roles/cmd/pkg/api/handlers"
 	"example/snap_roles/internal/constants"
+	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
 type RouterInterface interface {
-	initializeRouter()
+	InitializeRouter()
 }
 type RouterStruct struct {
-	companyApiStruct api.CompanyApiStruct
-	constant         constants.CompanyStruct
-	handler          handlers.HandlerStruct
-	controller       controller.JobApiControllerStruct
+	CompanyApiStruct api.CompanyApiStruct
+	Constant         constants.CompanyStruct
+	Handler          handlers.HandlerStruct
+	Controller       controller.JobApiControllerStruct
 }
 
-func (rr *RouterStruct) initializeRouter() {
+func (rr *RouterStruct) InitializeRouter() {
 	r := mux.NewRouter()
-	r.HandleFunc("/microsoft", rr.controller.GetMicrosoftJobs).Methods("GET")
+	r.HandleFunc("/microsoft", rr.Controller.GetMicrosoftJobs).Methods("GET")
+	http.ListenAndServe(":8080", r)
+
 }

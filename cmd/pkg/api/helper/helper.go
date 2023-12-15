@@ -14,12 +14,3 @@ func MarshalJSON(data interface{}) ([]byte, error) {
 	}
 	return jsonData, nil
 }
-
-// UnmarshalJSON is a generic function to unmarshal JSON data into a provided data structure
-func UnmarshalJSON(jsonData []byte, target interface{}) error {
-	if err := json.Unmarshal(jsonData, target); err != nil {
-		log.Fatalf("Error unmarshalling JSON: %s", err)
-		return err
-	}
-	return nil
-}

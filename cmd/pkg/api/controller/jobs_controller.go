@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"encoding/json"
 	"example/snap_roles/cmd/pkg/api"
 	"net/http"
 )
@@ -11,10 +10,16 @@ type JobApiControllerInterface interface {
 }
 
 type JobApiControllerStruct struct {
-	api api.CompanyApiStruct
+	Api api.CompanyApiStruct
 }
 
 func (j *JobApiControllerStruct) GetMicrosoftJobs(w http.ResponseWriter, r *http.Request) {
-	resp := j.api.GetMicrosoftJobs()
-	json.NewEncoder(w).Encode(resp)
+	resp, err := j.Api.GetMicrosoftJobs()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(resp)
 }

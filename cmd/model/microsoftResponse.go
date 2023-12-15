@@ -1,34 +1,34 @@
 package model
 
 type MicrosoftApiResponse struct {
-	operationResult OperationResult `json:"operationResult"`
-	errorInfo       string          `json:"errorInfo"`
+	OperationResult OperationResult `json:"operationResult"`
+	ErrorInfo       string          `json:"errorInfo"`
 }
 type OperationResult struct {
-	result    Result `json:"result"`
-	status    string `json:"status"`
-	quality   string `json:"quality"`
-	errorcode string `json:"errorcode"`
+	Result    Result `json:"result"`
+	Status    string `json:"status"`
+	Quality   string `json:"quality"`
+	Errorcode string `json:"errorcode"`
 }
 type Result struct {
-	searchId  string `json:"searchId"`
-	totalJobs int64  `json:"totalJobs"`
-	jobs      []Jobs `json:"jobs"`
-	id        int64  `json:"id"`
+	SearchId  string `json:"searchId"`
+	TotalJobs int64  `json:"totalJobs"`
+	Jobs      []Jobs `json:"jobs"`
+	Id        int64  `json:"id"`
 }
 type Jobs struct {
-	jobId       string       `json:"jobId"`
-	title       string       `json:"title"`
-	postingDate string       `json:"postingDate"`
-	properties  []Properties `json:"properties"`
+	JobId       string     `json:"jobId"`
+	Title       string     `json:"title"`
+	PostingDate string     `json:"postingDate"`
+	Properties  Properties `json:"properties"`
 }
 type Properties struct {
-	description     string   `json:"description"`
-	locations       []string `json:"locations"`
-	primaryLocation string   `json:"primaryLocation"`
-	profession      string   `json:"profession"`
-	jobType         string   `json:"jobType"`
-	roleType        string   `json:"roleType"`
-	employmentType  string   `json:"employmentType"`
-	educationLevel  string   `json:"educationLevel"`
+	Description     string   `json:"description"`
+	Locations       []string `json:"locations"`
+	PrimaryLocation string   `json:"primaryLocation"`
+	Profession      string   `json:"profession"`
+	JobType         string   `json:"jobType"`
+	RoleType        string   `json:"roleType"`
+	EmploymentType  string   `json:"employmentType"`
+	EducationLevel  string   `json:"educationLevel"`
 }

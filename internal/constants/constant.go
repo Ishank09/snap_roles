@@ -1,6 +1,7 @@
 package constants
 
 import (
+	"fmt"
 	"net/url"
 )
 
@@ -26,24 +27,25 @@ type CompanyStruct struct {
 	CompanyName string
 	RequestType RequestType
 	URL         string
-	Parameters  map[string]string
+	Parameters  map[string][]string
 	Body        interface{}
 }
 
 func (c *CompanyStruct) GenerateGetURL() string {
-	u, err := url.Parse(c.URL)
-	if err != nil {
-		panic(err)
+	baseURL := c.URL
+	params := c.Parameters
+	queryParams := url.Values{}
+
+	// Add parameters to the URL
+	for key, values := range params {
+		for _, value := range values {
+			queryParams.Add(key, value)
+		}
 	}
 
-	q := u.Query()
-	for key, value := range c.Parameters {
-		q.Add(key, value)
-	}
-
-	u.RawQuery = q.Encode()
-
-	return u.String()
+	// Construct the final URL
+	finalURL := fmt.Sprintf("%s?%s", baseURL, queryParams.Encode())
+	return finalURL
 }
 
 func (c *CompanyStruct) GetMicrosoftData() CompanyStruct {
@@ -57,18 +59,20 @@ var MicrosoftJobs = CompanyStruct{
 	CompanyName: "Microsoft Jobs",
 	RequestType: Get,
 	URL:         MicrosoftJobUrl,
-	Parameters: map[string]string{
-		"lc":   "United States",
-		"p":    "Engineering",
-		"d":    "Applied Sciences",
-		"exp":  "Students and graduates",
-		"ws":   "Microsoft on-site only",
-		"el":   "Bachelors",
-		"l":    "en_us",
-		"pg":   "1",
-		"pgSz": "20",
-		"o":    "Relevance",
-		"flt":  "true",
+	Parameters: map[string][]string{
+		"lc":   {"United States"},
+		"p":    {"Engineering", "Research, Applied, & Data Sciences", "Software Engineering"},
+		"d":    {"Applied Sciences", "Data Science", "Research Sciences", "Software Engineering"},
+		"exp":  {"Students and graduates"},
+		"rt":   {"Individual Contributor"},
+		"et":   {"Full-Time", "Internship", "Post Doc Research"},
+		"ws":   {"Microsoft on-site only", "Up to 50% work from home"},
+		"el":   {"Bachelors", "Doctorate"},
+		"l":    {"en_us"},
+		"pg":   {"1"},
+		"pgSz": {"20"},
+		"o":    {"Relevance"},
+		"flt":  {"true"},
 	},
 	Body: nil,
 }
