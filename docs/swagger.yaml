@@ -1,0 +1,50 @@
+definitions:
+  model.MicrosoftResponse:
+    properties:
+      jobId:
+        type: string
+      postedUrl:
+        type: string
+      postingDate:
+        type: string
+      properties:
+        $ref: '#/definitions/model.Properties'
+      title:
+        type: string
+    type: object
+  model.Properties:
+    properties:
+      description:
+        type: string
+      educationLevel:
+        type: string
+      employmentType:
+        type: string
+      jobType:
+        type: string
+      locations:
+        items:
+          type: string
+        type: array
+      primaryLocation:
+        type: string
+      profession:
+        type: string
+      roleType:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/microsoft/:
+    get:
+      description: get microsoft jobs
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MicrosoftResponse'
+      summary: Show an account
+swagger: "2.0"

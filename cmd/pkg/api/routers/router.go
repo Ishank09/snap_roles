@@ -3,13 +3,19 @@ package routers
 import (
 	"example/snap_roles/cmd/pkg/api"
 	"example/snap_roles/cmd/pkg/api/controller"
+
 	"example/snap_roles/cmd/pkg/api/handlers"
 	"example/snap_roles/internal/constants"
-	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
+
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	// gin-swagger middleware
+	swaggerFiles "github.com/swaggo/files"
 )
 
+// swagger embed files
 type RouterInterface interface {
 	InitializeRouter()
 }
@@ -21,8 +27,25 @@ type RouterStruct struct {
 }
 
 func (rr *RouterStruct) InitializeRouter() {
-	r := mux.NewRouter()
-	r.HandleFunc("/microsoft", rr.Controller.GetMicrosoftJobs).Methods("GET")
-	http.ListenAndServe(":8080", r)
+	r := gin.Default()
+	constant := &constants.CompanyStruct{}
+	handler := &handlers.HandlerStruct{}
+
+	companyApiStruct := &api.CompanyApiStruct{
+		Constant: *constant,
+		Handler:  *handler,
+	}
+	c := controller.NewJobApiController(*companyApiStruct)
+
+	v1 := r.Group("/api/v1")
+	{
+		jobs := v1.Group("/microsoft")
+		{
+			jobs.GET("", c.GetMicrosoftJobs)
+		}
+
+	}
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.Run(":8080")
 
 }

@@ -41,11 +41,15 @@ func checkMicrosoftPostedDate(timestampString string) bool {
 	duration := time.Since(timestamp)
 
 	// Check if the duration is within the last 15 minutes
-	if duration <= 3*24*time.Hour {
+	// if duration <= 3*24*time.Hour {
+
+	// Assuming duration is a time.Duration variable
+	if duration <= time.Duration(constants.MicrosoftPingSecs)*time.Second {
 		return true
 	} else {
 		return false
 	}
+
 }
 
 func getLatestMicrosoftJobs(resp model.MicrosoftApiResponse) []model.MicrosoftResponse {
