@@ -23,7 +23,8 @@ type JobApiControllerStruct struct {
 }
 
 // GetMicrosoftJobs godoc
-// @Summary      Show an account
+// @Summary      Get microsoft Jobs
+// @Tags         Jobs
 // @Description  get microsoft jobs
 // @Produce      json
 // @Success      200  {object}  model.MicrosoftResponse
@@ -37,7 +38,6 @@ func (j *JobApiControllerStruct) GetMicrosoftJobs(c *gin.Context) {
 		return
 	}
 
-	c.Header("Content-Type", "application/json")
-	c.String(http.StatusOK, string(resp))
+	c.JSON(http.StatusOK, resp)
 
 }

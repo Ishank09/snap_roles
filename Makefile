@@ -14,6 +14,6 @@ clean:
 	rm ${BINARY_NAME}
 
 swag:
-	swag init -g ${MAIN_DIR}
+	swag init -g ${ROUTER_DIR}
 
 swag_run: swag run

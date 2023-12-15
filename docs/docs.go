@@ -21,7 +21,10 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Show an account",
+                "tags": [
+                    "Jobs"
+                ],
+                "summary": "Get microsoft Jobs",
                 "responses": {
                     "200": {
                         "description": "OK",
