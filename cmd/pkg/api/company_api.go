@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"example/snap_roles/cmd/model"
 	"example/snap_roles/cmd/pkg/api/handlers"
@@ -101,8 +102,38 @@ func (c *CompanyApiStruct) GetMicrosoftJobs() ([]byte, error) {
 	return marshaledJSON, nil
 }
 
-func (c *CompanyApiStruct) GetAppleJobs(interface{}) {
-	// appleStruct := c.constant.GetAppleData()
-	// resp, err := c.handler.PostApi(appleStruct.URL, "application/json", constants.AppleJobsBodyStruct)
+func (c *CompanyApiStruct) GetAppleJobs() ([]byte, error) {
+	appleStruct := c.Constant.GetAppleData()
+	// Assuming appleStruct.Body is of type interface{}
+	bodyBytes, ok := appleStruct.Body.([]byte)
+	if !ok {
+		// Handle the case where the assertion fails
+		// For example, you might return an error or use a default value
+		bodyBytes = []byte("default body")
+	}
+	resp, err := c.Handler.PostApi(appleStruct.URL, "application/json", bytes.NewBuffer(bodyBytes))
+	if err != nil {
+		return nil, fmt.Errorf("Microsoft API error: %s", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("Microsoft API error. Error reading response body: %s", err)
+	}
+
+	var microsoftApiResponse model.MicrosoftApiResponse
+	err = unmarshalMicrosoftJSON(body, &microsoftApiResponse)
+	if err != nil {
+		return nil, fmt.Errorf("Error during unmarshaling: %s", err)
+	}
+	constructedResponse := getLatestMicrosoftJobs(microsoftApiResponse)
+
+	marshaledJSON, err := json.Marshal(constructedResponse)
+	if err != nil {
+		return nil, fmt.Errorf("Error during marshaling: %s", err)
+	}
+
+	return marshaledJSON, nil
 
 }

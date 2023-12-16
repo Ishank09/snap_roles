@@ -15,6 +15,26 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/apple/": {
+            "get": {
+                "description": "get apple jobs",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Jobs"
+                ],
+                "summary": "Get Apple Jobs",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MicrosoftResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/microsoft/": {
             "get": {
                 "description": "get microsoft jobs",

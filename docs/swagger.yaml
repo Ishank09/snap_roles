@@ -36,6 +36,19 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/v1/apple/:
+    get:
+      description: get apple jobs
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MicrosoftResponse'
+      summary: Get Apple Jobs
+      tags:
+      - Jobs
   /api/v1/microsoft/:
     get:
       description: get microsoft jobs

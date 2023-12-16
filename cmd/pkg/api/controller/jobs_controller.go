@@ -9,6 +9,7 @@ import (
 
 type JobApiControllerInterface interface {
 	GetMicrosoftJobs(c *gin.Context) interface{}
+	GetAppleJobs(c *gin.Context) interface{}
 }
 
 // NewController creates a new instance of the Controller.
@@ -40,4 +41,20 @@ func (j *JobApiControllerStruct) GetMicrosoftJobs(c *gin.Context) {
 
 	c.JSON(http.StatusOK, resp)
 
+}
+
+// GetAppleJobs godoc
+// @Summary      Get Apple Jobs
+// @Tags         Jobs
+// @Description  get apple jobs
+// @Produce      json
+// @Success      200  {object}  model.MicrosoftResponse
+// @Router       /api/v1/apple/ [get]
+func (j *JobApiControllerStruct) GetAppleJobs(c *gin.Context) {
+	resp, err := j.Api.GetAppleJobs()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, resp)
 }
