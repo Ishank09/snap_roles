@@ -40,3 +40,47 @@ type MicrosoftResponse struct {
 	PostedUrl   string     `json:"postedUrl"`
 	Properties  Properties `json:"properties"`
 }
+
+type AppleApiResponse struct {
+	SearchResults []SearchResults `json:"searchResults"`
+	totalRecords  int             `json:totalRecords`
+}
+
+type Location struct {
+	City          string `json:"city"`
+	StateProvince string `json:"stateProvince"`
+	CountryName   string `json:"countryName"`
+	Metro         string `json:"metro"`
+	Region        string `json:"region"`
+	Name          string `json:"name"`
+	CountryID     string `json:"countryID"`
+	Level         int    `json:"level"`
+}
+
+type LocaleInfo struct {
+	LanguageCode      string `json:"languageCode"`
+	DateFormat        string `json:"dateFormat"`
+	DefaultLocaleCode string `json:"defaultLocaleCode"`
+}
+
+type Team struct {
+	TeamName string `json:"teamName"`
+	TeamID   string `json:"teamID"`
+	TeamCode string `json:"teamCode"`
+}
+
+type SearchResults struct {
+	ID                      string     `json:"id"`
+	JobSummary              string     `json:"jobSummary"`
+	Locations               []Location `json:"locations"`
+	PositionID              string     `json:"positionId"`
+	PostingDate             string     `json:"postingDate"`
+	PostingTitle            string     `json:"postingTitle"`
+	LocaleInfo              LocaleInfo `json:"localeInfo"`
+	PostDateInGMT           string     `json:"postDateInGMT"`
+	TransformedPostingTitle string     `json:"transformedPostingTitle"`
+	ReqID                   string     `json:"reqId"`
+	ManagedPipelineRole     bool       `json:"managedPipelineRole"`
+	Team                    Team       `json:"team"`
+	HomeOffice              bool       `json:"homeOffice"`
+}

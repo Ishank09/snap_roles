@@ -43,6 +43,10 @@ func (rr *RouterStruct) InitializeRouter() {
 		{
 			jobs.GET("", c.GetMicrosoftJobs)
 		}
+		appleJobs := v1.Group("/apple")
+		{
+			appleJobs.GET("", c.GetAppleJobs)
+		}
 
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

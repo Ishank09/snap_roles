@@ -11,3 +11,4 @@ var ApplePingSecs int64 = 900
 // Microsoft
 var Microsoft_Location string = "United States"
 var MicrosoftJobShareUrl string = "https://jobs.careers.microsoft.com/global/en/share/%s/?utm_source=Job Share&utm_campaign=Copy-job-share"
+var AppleJobShareUrl string = "https://jobs.apple.com/en-us/%s"

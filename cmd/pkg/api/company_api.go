@@ -31,6 +31,14 @@ func unmarshalMicrosoftJSON(jsonData []byte, target *model.MicrosoftApiResponse)
 	return nil
 }
 
+func unmarshalAppleJSON(jsonData []byte, target *model.AppleApiResponse) error {
+	if err := json.Unmarshal(jsonData, target); err != nil {
+		log.Fatalf("Error unmarshalling JSON: %s", err)
+		return err
+	}
+	return nil
+}
+
 func checkMicrosoftPostedDate(timestampString string) bool {
 	timestamp, err := time.Parse(time.RFC3339, timestampString)
 	if err != nil {
@@ -73,7 +81,24 @@ func getLatestMicrosoftJobs(resp model.MicrosoftApiResponse) []model.MicrosoftRe
 
 }
 
-func (c *CompanyApiStruct) GetMicrosoftJobs() ([]byte, error) {
+func getLatestAppleJobs(resp model.AppleApiResponse) []model.MicrosoftResponse {
+	jobs := resp.SearchResults
+	var response []model.MicrosoftResponse
+	for _, job := range jobs {
+		var one_job model.MicrosoftResponse
+		one_job.JobId = job.PositionID
+		one_job.PostingDate = job.PostingDate
+		one_job.Properties.Description = job.ReqID
+		one_job.Title = job.PostingTitle
+		one_job.PostedUrl = fmt.Sprintf(constants.AppleJobShareUrl, one_job.JobId)
+		response = append(response, one_job)
+
+	}
+	return response
+
+}
+
+func (c *CompanyApiStruct) GetMicrosoftJobs() ([]model.MicrosoftResponse, error) {
 	microsoftStruct := c.Constant.GetMicrosoftData()
 	url := microsoftStruct.GenerateGetURL()
 	resp, err := c.Handler.GetApi(url)
@@ -94,46 +119,56 @@ func (c *CompanyApiStruct) GetMicrosoftJobs() ([]byte, error) {
 	}
 	constructedResponse := getLatestMicrosoftJobs(microsoftApiResponse)
 
-	marshaledJSON, err := json.Marshal(constructedResponse)
-	if err != nil {
-		return nil, fmt.Errorf("Error during marshaling: %s", err)
-	}
+	// marshaledJSON, err := json.Marshal(constructedResponse)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("Error during marshaling: %s", err)
+	// }
 
-	return marshaledJSON, nil
+	return constructedResponse, nil
 }
 
-func (c *CompanyApiStruct) GetAppleJobs() ([]byte, error) {
+func (c *CompanyApiStruct) GetAppleJobs() ([]model.MicrosoftResponse, error) {
 	appleStruct := c.Constant.GetAppleData()
 	// Assuming appleStruct.Body is of type interface{}
-	bodyBytes, ok := appleStruct.Body.([]byte)
+	// Assuming appleStruct.Body is of type interface{}
+	appleJobsBody, ok := appleStruct.Body.(constants.AppleJobsBodyStruct)
 	if !ok {
 		// Handle the case where the assertion fails
 		// For example, you might return an error or use a default value
-		bodyBytes = []byte("default body")
+		fmt.Println("Error: Unable to convert body to AppleJobsBodyStruct")
+
+	}
+
+	// Now you can use appleJobsBody as AppleJobsBodyStruct
+	// Convert it to []byte if needed
+	bodyBytes, err := json.Marshal(appleJobsBody)
+	if err != nil {
+		fmt.Println("Error:", err)
+
 	}
 	resp, err := c.Handler.PostApi(appleStruct.URL, "application/json", bytes.NewBuffer(bodyBytes))
 	if err != nil {
-		return nil, fmt.Errorf("Microsoft API error: %s", err)
+		return nil, fmt.Errorf("Apple API error: %s", err)
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("Microsoft API error. Error reading response body: %s", err)
+		return nil, fmt.Errorf("Apple API error. Error reading response body: %s", err)
 	}
 
-	var microsoftApiResponse model.MicrosoftApiResponse
-	err = unmarshalMicrosoftJSON(body, &microsoftApiResponse)
+	var appleApiResponse model.AppleApiResponse
+	err = unmarshalAppleJSON(body, &appleApiResponse)
 	if err != nil {
 		return nil, fmt.Errorf("Error during unmarshaling: %s", err)
 	}
-	constructedResponse := getLatestMicrosoftJobs(microsoftApiResponse)
+	constructedResponse := getLatestAppleJobs(appleApiResponse)
 
-	marshaledJSON, err := json.Marshal(constructedResponse)
-	if err != nil {
-		return nil, fmt.Errorf("Error during marshaling: %s", err)
-	}
+	// marshaledJSON, err := json.Marshal(constructedResponse)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("Error during marshaling: %s", err)
+	// }
 
-	return marshaledJSON, nil
+	return constructedResponse, nil
 
 }
