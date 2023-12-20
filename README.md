@@ -88,3 +88,10 @@ make clean
 ```
 
 
+## Disclaimer
+
+This project utilizes unofficial APIs for informational purposes only. The use of these APIs is strictly on a non-monetary trial basis and is intended for educational and personal exploration. The project author does not endorse or encourage any unauthorized use of official APIs or any violations of terms of service from respective platforms.
+
+Please be aware that using unofficial APIs may pose legal risks, and it is advised to respect the terms and conditions set by the platform providers. The project author disclaims any responsibility for consequences arising from the use of unofficial APIs in a manner inconsistent with platform policies.
+
+**Note:** Ensure compliance with relevant terms of service and API usage policies to avoid legal implications.
