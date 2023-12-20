@@ -27,7 +27,7 @@ Certain companies may initially post generic positions for all teams and later a
 Ensure Go is installed, and execute the following commands in the root folder.
 
 ## Running
-To initialize and run Swagger, use the following command:
+To initialize and run Swagger, use the following command (this command will build, and run application server):
 ```
 make swag_run
 ```
