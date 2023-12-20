@@ -14,7 +14,7 @@ As of now, the repository supports job information retrieval for two major compa
 - Microsoft
 - Apple
 
-The current implementation covers only one aspect of the architecture, with Swagger serving as a tool to interact with the APIs. Notably, parameters such as recent graduate, intern status, and others are currently hardcoded.
+The existing implementation addresses a singular facet of the architecture, employing Swagger as a tool for API interaction. It's worth noting that certain parameters, including recent graduate and intern status, are presently hardcoded. Furthermore, the notification and pinging service is yet to be implemented. Although a scheduler can be initiated directly on the hosting site, the current setup does include code for a database connection, albeit inactive. This database connection code is designed with future purposes in mind.
 
 ## How It Works
 Snap Roles aims to gather job information directly from official company websites, utilizing freely available APIs. The program employs a scheduler that checks APIs every 15 minutes, resulting in an overall latency of 15 minutes. This ensures that students receive timely updates on job postings. While some companies have well-structured APIs providing timestamp information (e.g., Microsoft), others like Apple only return the date of the job posting. To address this, a system has been implemented to store job IDs and compare them with previous scheduler iterations, effectively identifying jobs posted in the last 15 minutes.
