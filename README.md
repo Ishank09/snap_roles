@@ -1,95 +1,38 @@
 # Snap Roles
 
 ## Introduction
-This is 2023, and the economic condition isn't very great now. All the students are working hard to secure atleast one intern or FTE (full time employment) jobs. The situation are kinda hard now, not like previous batch where everyone had a few offers to decide upon. Students are corssing 500-600 job application mark and still finding hard to secure even interview, leave getting an offer. The amount of students applying are humangous and top companies has limited jobs. The application pool is filling fast, as soon as in few hours after posting the jobs, due to sheer volume of students applying. And out of these thousands who were able to see those jobs, only few manages to get resume selected.
-So the main problem for students is getting timely information about the company's relevant job. And here this application comes to rescue=.
 
-The aim of this program was to give instant information about Recent Grad/ Intern posting, mainly 10-15 minues of latency after a job posting. The program relies on Official APIs from company to get the accurate data.
+In the challenging economic landscape of 2023, students are facing unprecedented difficulties securing internships or full-time employment (FTE) opportunities. Unlike previous years, where job offers were plentiful, students now find themselves submitting hundreds of applications without guarantee of even an interview. The competition is fierce, with an overwhelming number of applicants vying for a limited number of positions at top companies. Job postings fill up rapidly, often within hours, making it challenging for students to stay informed and secure timely opportunities. The struggle is not just in securing offers but in obtaining relevant information about companies and their job postings in a timely manner.
 
-The goal was to make two system for informing students about the newly added jobs:
-- A mobile application
-- Email notification
+Enter Snap Roles, an application designed to address this pressing issue. The program aims to provide instantaneous information about recent graduate and internship opportunities, with a latency as low as 10-15 minutes after a job posting. Leveraging official APIs from companies ensures the accuracy of the data provided.
 
 ## Architecture Diagram
-![alt text](assets/images/arch_diagram.png)
+![Architecture Diagram](assets/images/arch_diagram.png)
 
+## Work Until Now
+As of now, the repository supports job information retrieval for two major companies:
+- Microsoft
+- Apple
 
-## How it will work?
-We have a lot of companies which don't have proper authentication system for their career site for listing jobs, due to many reasons. Thus I aim to utilize these freely available apis to get instant information about jobs posted, directly from the official website itself. Without relying on external sites like linkedin, or indeed, where recruiters post multiple jobs again and agian. 
-This helps in getting timely and correct information from the source itself.
-i have implemented a schedular which check the Apis in every 15 minutes, thus giving the overall latency of 15m minutes obly. So, students will be able to get the job information as soon as 15 minutes of it being posted.
-Now, there are tons of companies and they follow different api contracts and authentication methods for thier site. I thought of robust system to incorporate all the companies.
-So microsoft has very good job's api, in wihch they return the timestamp of the job as well. But for apple, they just return date of the job posted, thus we will have to store each job Id and compare with past schedular iterations. This way we will be able to get jobs posted in last 15 minutes.
-Please note, scheduling time of 15 minutes was taken to reduce the number of API calls to the servers and at the same time giving robust timely updates to candidates, this time can be changed according to convinience.
+The current implementation covers only one aspect of the architecture, with Swagger serving as a tool to interact with the APIs. Notably, parameters such as recent graduate, intern status, and others are currently hardcoded.
 
-For companies like meta, they use highly authenticated services which can't be used to access useful information about the jobs. For these types of companies, the only way is web scrapping, we can apply the same schedular, but this time on web scrapper to get latest jobs.
+## How It Works
+Snap Roles aims to gather job information directly from official company websites, utilizing freely available APIs. The program employs a scheduler that checks APIs every 15 minutes, resulting in an overall latency of 15 minutes. This ensures that students receive timely updates on job postings. While some companies have well-structured APIs providing timestamp information (e.g., Microsoft), others like Apple only return the date of the job posting. To address this, a system has been implemented to store job IDs and compare them with previous scheduler iterations, effectively identifying jobs posted in the last 15 minutes.
 
-Now various companies initially open a generic positions for all the teams and divide candidates to them. Additioannly, some manager of a known company or even unknown company (here known companies are those for which the schedular is working to get data) might post job opportuinities on linkedin itself. But they're highly irrelavant, because they mainly include consultancy. For those types of companies, we can scrap data from linkedin posts (or even use Linkedin Posts api depending upon the guidelines). 
+For companies with highly authenticated services, like Meta, web scraping becomes the method of choice. The scheduler can be adapted to run on a web scraper to fetch the latest job information.
 
+Certain companies may initially post generic positions for all teams and later assign candidates accordingly. Additionally, individual managers, both from known and unknown companies (where the scheduler is operational), may post job opportunities on platforms like LinkedIn. For such cases, data scraping from LinkedIn posts or the LinkedIn Posts API can be employed, depending on guidelines.
 
-## Prerequisites: 
-- Go needs to be installed; 
-- The following commands are being executed in the root folder.
+## Prerequisites
+Ensure Go is installed, and execute the following commands in the root folder.
 
 ## Running
-
-run this command to run swagger init and running (bulding) the server
+To initialize and run Swagger, use the following command:
 ```
 make swag_run
 ```
 
-run this command to clean the solution and remove the binaries
+To clean the solution and remove binaries, run:
 ```
 make clean
 ```
-
-## Folder Structure 
-```
-|-- snap_roles
-   |-- cmd
-      |-- .DS_Store
-      |-- model
-         |-- dbModel.go
-         |-- microsoftResponse.go
-      |-- api
-         |-- main.go
-      |-- pkg
-         |-- db
-            |-- azure_sql.go
-         |-- api
-            |-- routers
-               |-- router.go
-            |-- company_api.go
-            |-- controller
-               |-- jobs_controller.go
-            |-- helper
-               |-- helper.go
-            |-- handlers
-               |-- requests_handler.go
-   |-- go.mod
-   |-- .DS_Store
-   |-- stage.env
-   |-- Makefile
-   |-- internal
-      |-- .DS_Store
-      |-- constants
-         |-- construct_json_response.go
-         |-- constant.go
-   |-- go.sum
-   |-- docs
-      |-- swagger.yaml
-      |-- docs.go
-      |-- swagger.json
-   |-- README.md
-   |-- .gitignore
-   |-- configs
-      |-- config.go
-   |-- .vscode
-      |-- launch.json
-   |-- assets
-      |-- .DS_Store
-      |-- images
-         |-- Blank board.png
-```
-
-
