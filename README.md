@@ -36,3 +36,55 @@ To clean the solution and remove binaries, run:
 ```
 make clean
 ```
+
+
+## Folder Structure 
+```
+|-- snap_roles
+   |-- cmd
+      |-- .DS_Store
+      |-- model
+         |-- dbModel.go
+         |-- microsoftResponse.go
+      |-- api
+         |-- main.go
+      |-- pkg
+         |-- db
+            |-- azure_sql.go
+         |-- api
+            |-- routers
+               |-- router.go
+            |-- company_api.go
+            |-- controller
+               |-- jobs_controller.go
+            |-- helper
+               |-- helper.go
+            |-- handlers
+               |-- requests_handler.go
+   |-- go.mod
+   |-- .DS_Store
+   |-- stage.env
+   |-- Makefile
+   |-- internal
+      |-- .DS_Store
+      |-- constants
+         |-- construct_json_response.go
+         |-- constant.go
+   |-- go.sum
+   |-- docs
+      |-- swagger.yaml
+      |-- docs.go
+      |-- swagger.json
+   |-- README.md
+   |-- .gitignore
+   |-- configs
+      |-- config.go
+   |-- .vscode
+      |-- launch.json
+   |-- assets
+      |-- .DS_Store
+      |-- images
+         |-- Blank board.png
+```
+
+
